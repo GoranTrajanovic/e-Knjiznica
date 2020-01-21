@@ -17,8 +17,6 @@
 			</form>
 		</a>
 
-
-
 		<p id="welcome_message"><b><?php echo $_SESSION['ucenik_name']; ?> <?php echo $_SESSION['ucenik_surname'] ?></b>, dobrodošli.</p>
 		<div id="site_content">
 			<?php

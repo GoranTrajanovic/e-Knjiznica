@@ -97,5 +97,10 @@
 				 elseif (strpos($fullUrl, "login_ucenik=error") == true) { echo "<div class='center'><p class='error'>Krivi unos.<br> Pokušajte ponovno.</p></div>"; }
 		?>
 
+		<?php
+		$fullUrl = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; // get url which generated this
+				 if (strpos($fullUrl, "login_none=empty") == true) { echo "<div class='center'><p class='error'>Molimo vas popunite sva polja!</p></div>"; }
+		?>
+
 	</body>
 </html>

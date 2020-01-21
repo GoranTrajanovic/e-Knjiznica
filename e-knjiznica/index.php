@@ -22,93 +22,81 @@ include $_SERVER['DOCUMENT_ROOT'] . '/includes/helpers.inc.php';
 // 	exit();
 // }
 
-			
-if (isset($_POST['login_admin'])) {
-	include $_SERVER['DOCUMENT_ROOT'] . '/includes/db_maturalni.inc.php';
-	
-	if (empty($_POST['uid']) || empty($_POST['pwd'])) {
-		header("Location: /e-knjiznica/first_page.html.php?login_admin=empty");
-		exit();
-	} else {
-		// Check if there is a user like this in db
-		$stmt = $pdo->prepare("SELECT * FROM admin WHERE admin_username = ?");
-		if ($stmt->execute(array($_POST['uid']))) {
-		    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		    $firstRow = $data[0];
-		    if (password_verify($_POST['pwd'], $firstRow['admin_password'])) {
-				header("Location: /e-knjiznica/admin/admin.html.php");
-				exit();
-		    } else {
-		    	header("Location: /e-knjiznica/first_page.html.php?login_admin=error");
-				exit();
-		    }
-		}
-	}
-	 
-} elseif (isset($_POST['login_knjiznicar'])) {
-	include $_SERVER['DOCUMENT_ROOT'] . '/includes/db_maturalni.inc.php';
-	
-	if (empty($_POST['uid']) || empty($_POST['pwd'])) {
-		header("Location: /e-knjiznica/first_page.html.php?login_knjiznicar=empty");
-		exit();
-	} else {
-		// Check if there is a user like this in db
-		$stmt = $pdo->prepare("SELECT * FROM knjiznicar WHERE knjiznicar_username = ?");
-		if ($stmt->execute(array($_POST['uid']))) {
-		    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		    $firstRow = $data[0];
-		    if ($_POST['pwd'] == $firstRow['knjiznicar_password']) {
-				header("Location: /e-knjiznica/knjiznicar/knjiznicar.html.php");
-				exit();
-		    } else {
-		    	header("Location: /e-knjiznica/first_page.html.php?login_knjiznicar=error");
-				exit();
-		    }
-		}
-	}
-} elseif (isset($_POST['login_ucenik'])) {
-	include $_SERVER['DOCUMENT_ROOT'] . '/includes/db_maturalni.inc.php';
-	
-	if (empty($_POST['uid']) || empty($_POST['pwd'])) {
-		header("Location: /e-knjiznica/first_page.html.php?login_ucenik=empty");
-		exit();
-	} else {
-		// Check if there is a user like this in db
-		$stmt = $pdo->prepare("SELECT * FROM ucenici WHERE ucenik_username = ?");
-		if ($stmt->execute(array($_POST['uid']))) {
-		    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		    $firstRow = $data[0];
-		    if ($_POST['pwd'] == $firstRow['ucenik_password']) {
+class PersonForLogin{
+	private $personWhosLogging = "";
 
-		    	$_SESSION['ucenik_id'] = $firstRow['id'];
-		    	$_SESSION['ucenik_name'] = $firstRow['ucenik_name'];
-		    	$_SESSION['ucenik_surname'] = $firstRow['ucenik_surname'];
-		    	$_SESSION['ucenik_email'] = $firstRow['ucenik_email'];
-		    	$_SESSION['ucenik_oznaka'] = $firstRow['ucenik_oznaka'];
-		    	$_SESSION['ucenik_dani_posudbe'] = $firstRow['ucenik_dani_posudbe'];
-		    	$_SESSION['ucenik_br_rezervacija'] = $firstRow['ucenik_br_rezervacija'];
-		    	$_SESSION['ucenik_br_posudjenih_knjiga'] = $firstRow['ucenik_br_posudjenih_knjiga'];
-				header("Location: /e-knjiznica/ucenik/index.php");
-				exit();
-		    } else {
-		    	header("Location: /e-knjiznica/first_page.html.php?login_ucenik=error");
-				exit();
-		    }
+	public static function startLoginPage() {
+		if(!isset($_POST["login_admin"]) && !isset($_POST["login_knjiznicar"]) && !isset($_POST["login_ucenik"])){
+			include 'first_page.html.php';
+			exit();
 		}
 	}
-} else {
-	include 'first_page.html.php';
-	exit();
+
+	public function setPerson(){
+		if(isset($_POST["login_admin"])){
+			$this->personWhosLogging = "admin";
+			echo "{$this->personWhosLogging} je!";
+		} else if (isset($_POST["login_knjiznicar"])) {
+			$this->personWhosLogging = "knjiznicar";
+			echo "{$this->personWhosLogging} je!";
+		} else if (isset($_POST["login_ucenik"])) {
+			$this->personWhosLogging = "ucenik";
+			echo "{$this->personWhosLogging} je!";
+		}
+		else {
+			header("Location: /e-knjiznica/first_page.html.php?login_none=empty");
+			exit();
+		}
+	}
+
+	public function attemptLogin() {
+		$p = $this->personWhosLogging;
+		include $_SERVER['DOCUMENT_ROOT'] . '/includes/db_maturalni.inc.php';
+
+		if (empty($_POST['uid']) || empty($_POST['pwd'])) {
+			header("Location: /e-knjiznica/first_page.html.php?login_{$p}=empty");
+			exit();
+		} else {
+			// Check if there is a user like this in db
+			$stmt = $pdo->prepare("SELECT * FROM {$p} WHERE {$p}_username = ?");
+			if ($stmt->execute(array($_POST['uid']))) {
+				$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				$firstRow = $data[0];
+				if($p == 'admin' && password_verify($_POST['pwd'], $firstRow['admin_password'])){
+					header("Location: /e-knjiznica/{$p}/{$p}.html.php");
+					exit();	
+				} else if ($p == 'knjiznicar' && $_POST['pwd'] == $firstRow["{$p}_password"]) {
+					header("Location: /e-knjiznica/{$p}/{$p}.html.php");
+					exit();
+				} else if ($p == 'ucenik' && $_POST['pwd'] == $firstRow["{$p}_password"]) {
+					$_SESSION['ucenik_id'] = $firstRow['id'];
+					$_SESSION['ucenik_name'] = $firstRow['ucenik_name'];
+					$_SESSION['ucenik_surname'] = $firstRow['ucenik_surname'];
+					$_SESSION['ucenik_email'] = $firstRow['ucenik_email'];
+					$_SESSION['ucenik_oznaka'] = $firstRow['ucenik_oznaka'];
+					$_SESSION['ucenik_dani_posudbe'] = $firstRow['ucenik_dani_posudbe'];
+					$_SESSION['ucenik_br_rezervacija'] = $firstRow['ucenik_br_rezervacija'];
+					$_SESSION['ucenik_br_posudjenih_knjiga'] = $firstRow['ucenik_br_posudjenih_knjiga'];
+					header("Location: /e-knjiznica/{$p}/index.php");
+					exit();
+				} else {
+					header("Location: /e-knjiznica/first_page.html.php?login_{$p}=error");
+					exit();
+				}
+			}
+		}
+	}
 }
 
-3045   Josipa Bariæ
-3046   Marjan Sikora
-3047   Nikola Godinoviæ
-3048   Damir Lelas
-3049   Duje Èoko
-3050   Spomenka Bovan
-3051   Danijela Matiæ
-3052   Linda Vickoviæ
-3053   Ana Zdilar
-3054   Slavko Vujeviæ
+PersonForLogin::startLoginPage();
+
+$person = new PersonForLogin;
+/* if ($person->setPerson()){
+	include 'first_page.html.php';
+	exit();
+} */
+$person->setPerson();
+$person->attemptLogin();
+
+
 
