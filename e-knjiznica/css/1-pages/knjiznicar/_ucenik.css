@@ -1,0 +1,14 @@
+#ucenik_content {
+  width: 70%;
+  margin: auto;
+  margin-top: 15%; }
+  #ucenik_content img {
+    margin: 0;
+    float: left; }
+  #ucenik_content h1 {
+    font-size: 2em;
+    font-weight: 600; }
+  #ucenik_content::after {
+    content: "";
+    display: table;
+    clear: both; }

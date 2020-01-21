@@ -1,0 +1,68 @@
+select
+  margin-bottom: 2%
+  margin-right: 2%
+
+.dropbtn
+  background-color: white
+  font-size: inherit
+  font-weight: 600
+  padding: 5px
+  border: 2px solid $blue
+  border-radius: 3px
+  cursor: pointer
+  letter-spacing: 1px
+  margin-bottom: 0px
+
+  &:hover
+    background: white !important
+    color: #0080FF
+    text-decoration: underline
+  img
+    vertical-align: text-bottom
+    margin: 0
+    margin-left: 3px
+
+  span
+    color: darken($blue, 15%)
+    &:hover
+      text-decoration: underline
+
+
+
+
+.dropdown
+  position: relative
+  display: inline-block
+  margin-left: 1%
+
+.dropdown-content
+  display: none
+  position: absolute
+  background-color: white
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2)
+  border: 1px solid $blue
+  border-radius: 2px
+  min-width: 135%
+  align-content: center
+  a
+    color: black
+    text-decoration: none
+    display: inline
+
+  // form
+  //   display: inline
+  //   position: absolute
+  //   right: 5%
+
+    input[type="submit"]
+      padding: 5% !important
+
+.vrsta
+  padding: 6%
+  border-top: 1px solid $blue
+
+.vrsta:first-child
+  border: none
+
+.show
+  display: block

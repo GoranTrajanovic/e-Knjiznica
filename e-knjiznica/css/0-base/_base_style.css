@@ -1,0 +1,7 @@
+body {
+  background: url(../img/background_repeat_icon.png);
+  background-repeat: repeat; }
+
+@media only screen and (min-width: 1200px) {
+  body {
+    font-size: 1.2em; } }

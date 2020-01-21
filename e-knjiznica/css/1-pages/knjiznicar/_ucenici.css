@@ -1,0 +1,11 @@
+#warrning {
+  width: 50%;
+  margin: auto;
+  padding: 4%; }
+  #warrning img {
+    margin: 0;
+    vertical-align: middle; }
+  #warrning span {
+    color: black;
+    font-size: 1.3em;
+    font-weight: 600; }

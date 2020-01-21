@@ -1,0 +1,86 @@
+#ucenik
+  &_content
+    width: 82%
+    margin: auto
+    margin-top: 5%
+
+    img
+      margin: 0
+      float: left
+      margin-top: 10%
+
+    h1
+      font-size: 2em
+      font-weight: 600
+      color: $blue
+      margin-bottom: 2%
+      margin-left: 5%
+      display: inline-block
+      background: white
+      border-radius: 3px
+
+    h2
+      color: $orange
+      font-size: 1.5em
+      margin-left: 1%
+      display: inline-block
+      background: white
+      border-radius: 3px
+
+    &::after
+      content: ''
+      display: table
+      clear: both
+  &_details
+    float: left
+    margin-left: 5%
+    width: 70%
+
+    input[type=text]
+      width: 60%
+      padding: 6px
+      margin-right: 2%
+
+    input[type=submit]
+      padding: 5px
+      color: white
+      background: $blue
+      border-radius: 3px
+      letter-spacing: 1px
+      margin-bottom: 2%
+      &:hover
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.4)
+
+    > table
+      margin: 0
+      margin-bottom: 5%
+
+    .error
+      text-align: left !important
+      margin: 0
+      margin-bottom: 2%
+
+.ucenik_table
+  border: 2px solid #0080FF
+  border-top-left-radius: 5px
+  border-top-right-radius: 5px
+  border-top: 6px solid $blue
+  margin-bottom: 10%
+  margin-top: 2%
+  background: white
+
+  table
+    th
+      width: 25%
+
+    th:last-child
+      width: 10%
+
+    input[type=submit]
+      color: white
+      padding: 5px
+      border-radius: 3px
+      letter-spacing: 1px
+
+  p
+    padding: 3%

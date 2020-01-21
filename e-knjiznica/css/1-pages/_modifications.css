@@ -1,0 +1,12 @@
+.wide_content {
+  width: 85% !important; }
+  .wide_content > form {
+    display: flex;
+    flex-wrap: wrap; }
+
+form#set_vrsta {
+  display: inline; }
+
+@media print {
+  #back, #logout {
+    display: none; } }

@@ -1,0 +1,13 @@
+b {
+  font-weight: 600; }
+
+#welcome_message {
+  position: absolute;
+  top: 4%;
+  left: 2%;
+  font-size: 1.2em; }
+
+.user_ucenik > form {
+  display: inline; }
+.user_ucenik input[type=text] {
+  width: 45% !important; }

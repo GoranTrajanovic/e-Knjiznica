@@ -1,0 +1,181 @@
+ <?php
+
+session_start();
+
+include $_SERVER['DOCUMENT_ROOT'] . '/includes/magicquotes.inc.php'; 
+include $_SERVER['DOCUMENT_ROOT'] . '/includes/helpers.inc.php'; 
+
+
+
+if (!isset($_GET['text'])) {
+
+	include $_SERVER['DOCUMENT_ROOT'] . '/includes/db_maturalni.inc.php';
+
+	try{
+		$result = $pdo->query('SELECT * FROM ucenici');
+	}
+	catch (PDOException $e){
+		$error = 'Error listing ucenike ' . $e->getMessage();
+		include 'error.html.php';
+		exit();
+	}
+
+	foreach($result as $row){
+		$ucenici[] = array(
+			'id' => $row['id'],
+			'oznaka' => $row['ucenik_oznaka'],
+			'name' => $row['ucenik_name'],
+			'surname' => $row['ucenik_surname'],
+			'email' => $row['ucenik_email'],
+			'date' => date('d/m/Y', strtotime($row['ucenik_date'])),
+			'username' => $row['ucenik_username'],
+			'dani_posudbe' => $row['ucenik_dani_posudbe'],
+			'br_knjiga' => $row['ucenik_br_knjiga'],
+			'br_rezervacija' => $row['ucenik_br_rezervacija']
+		);
+	}
+} else {
+	include $_SERVER['DOCUMENT_ROOT'] . '/includes/db_maturalni.inc.php';
+	
+	try {
+		$sql = 'SELECT * FROM ucenici WHERE CONCAT(ucenik_oznaka, ucenik_name, ucenik_surname, ucenik_email, ucenik_date, ucenik_username) LIKE :search';
+		$s = $pdo->prepare($sql);
+		$s->bindValue(':search', '%' . $_GET['text'] . '%');
+		$s->execute();
+	} catch (PDOException $e) {
+		$error = 'Error fetching ucenike: ' . $e->getMessage();
+		include 'error.html.php';
+		exit();
+	}
+
+
+	foreach ($s as $row) {
+		$ucenici[] = array(
+			'id' => $row['id'],
+			'oznaka' => $row['ucenik_oznaka'],
+			'name' => $row['ucenik_name'],
+			'surname' => $row['ucenik_surname'],
+			'email' => $row['ucenik_email'],
+			'date' => date('d/m/Y', strtotime($row['ucenik_date'])),
+			'username' => $row['ucenik_username'],
+			'dani_posudbe' => $row['ucenik_dani_posudbe'],
+			'br_knjiga' => $row['ucenik_br_knjiga'],
+			'br_rezervacija' => $row['ucenik_br_rezervacija']
+		);
+	}
+}
+
+
+
+if (isset($_POST['set_ime_ucenika'])) {
+	include $_SERVER['DOCUMENT_ROOT'] . '/includes/db_maturalni.inc.php';
+
+	try {
+		$sql = 'INSERT INTO ucenici SET
+			ucenik_oznaka = :oznaka,
+			ucenik_name = :name, 
+			ucenik_surname = :surname,
+			ucenik_email = :email, 
+			ucenik_date = CURDATE(), 
+			ucenik_username = :uid, 
+			ucenik_password = :pwd'; 
+		$s = $pdo->prepare($sql); 
+		$s->bindValue(':oznaka', $_POST['set_ozn_ucenika']);	
+		$s->bindValue(':name', $_POST['set_ime_ucenika']);	
+		$s->bindValue(':surname', $_POST['set_prezime_ucenika']);
+		$s->bindValue(':email', $_POST['set_email_ucenika']);
+		$s->bindValue(':uid', $_POST['set_uid_ucenika']);
+		$s->bindValue(':pwd', $_POST['set_pwd_ucenika']);
+		$s->execute();
+	} catch (PDOException $e){
+		$error = 'Error adding ucenike: ' . $e->getMessage();
+		include 'error.html.php';
+		exit();
+	}
+
+	header("Location: .");
+	exit();
+
+}
+
+if (isset($_GET['deleteucenik'])) {
+	try{
+		$sql = 'DELETE FROM ucenici WHERE id = :id';
+		$s = $pdo->prepare($sql);
+		$s->bindValue(':id', $_POST['id']);
+		$s->execute();
+	}
+	catch (PDOException $e){
+		$error = 'Error deleting ucenik: ' . $e->getMessage();
+		include 'error.html.php';
+		exit();
+	}
+
+	header("Location: .");
+	exit();
+}
+
+if (isset($_GET['inspectucenik'])) {
+	
+	include $_SERVER['DOCUMENT_ROOT'] . '/includes/db_maturalni.inc.php';
+
+	try {
+		$sql = "SELECT id, ucenik_oznaka, ucenik_name, ucenik_surname FROM ucenici WHERE id = '" . $_POST['id'] . "'";
+		$result = $pdo->query($sql);
+		$data = $result->fetchAll(PDO::FETCH_ASSOC);
+		$user = $data[0];
+		
+		$sql = "SELECT knjige.id, knjiga_naslov, knjiga_autor
+			FROM knjige INNER JOIN rezervirane_knjige
+				ON knjige.id = rezervirano_knjiga_id
+			INNER JOIN ucenici
+				ON rezervirano_ucenik_id = ucenici.id
+			WHERE ucenici.id = '" . $_POST['id'] . "'";
+		$result = $pdo->query($sql);
+
+	} catch (PDOException $e){
+		$error = 'Error fetching knjige: ' . $e->getMessage();
+		include 'error.html.php';
+		exit();
+	}
+
+	foreach ($result as $row) {
+		$rezervirane_knjige[] = array(
+			'id' => $row['id'],
+			'naslov' => $row['knjiga_naslov'],
+			'autor' => $row['knjiga_autor']
+		);
+	}
+	include 'ucenik.html.php';
+	exit();
+}
+
+if (isset($_POST['set_posudba'])) {
+	
+	include $_SERVER['DOCUMENT_ROOT'] . '/includes/db_maturalni.inc.php';
+
+	list($value1, $value2) = explode('|', $_POST['set_posudba']);
+	try{
+		$sql = "INSERT INTO posudjene_knjige (posudba_ucenik_id, posudba_knjiga_id)
+			SELECT rezervirano_ucenik_id, rezervirano_knjiga_id
+			FROM rezervirane_knjige
+			WHERE rezervirano_ucenik_id = :uc_id AND rezervirano_knjiga_id = :knj_id";
+		$s = $pdo->prepare($sql);
+		$s->bindValue(':uc_id', $value2);
+		$s->bindValue(':knj_id', $value1);
+		$s->execute();
+	}
+	catch (PDOException $e){
+		$error = 'Error posudjivanje knjige: ' . $e->getMessage();
+		include 'error.html.php';
+		exit();
+	}
+
+	$_SESSION['rezervacija'] = true;
+	header('Location: .');
+	exit();
+}
+
+
+include 'ucenici.html.php';
+

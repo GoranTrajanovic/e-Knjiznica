@@ -1,0 +1,115 @@
+.login
+  width: 65%
+  margin: auto
+  display: flex
+  text-align: center
+  margin-top: 15%
+  font-size: 1.2em
+
+  &_card
+    flex-grow: 1
+    background: white
+    color: white
+    letter-spacing: 1px
+    transition: all .3s ease 0s
+    position: relative
+    z-index: 0
+
+    &:nth-child(2)
+      margin: auto 6% auto 6%
+
+    &_border
+      border: 3px solid #0080FF
+      border-radius: 5px
+
+    &_icon
+      position: absolute
+      top: 0
+      left: 0
+      bottom: 0
+      right: 0
+      background: #0080FF
+      border-radius: 5px
+
+      &:hover
+        cursor: pointer
+
+
+
+  &_label_white
+    margin: 10% 0 25% 0
+    font-weight: 600
+
+  &_label_blue
+    color: #0080FF
+    margin: 8% 0 25% 0
+    font-weight: 600
+
+  form
+    margin-top: 65%
+
+  img
+    width: 90px
+    height: 90px
+
+  input
+    margin: auto
+    display: block
+    width: 70%
+    padding: 2px
+
+  input
+    margin-bottom: 8%
+
+button
+  padding: 3px
+  border: 2px solid #0080FF
+  border-radius: 2px
+  color: #0080FF
+  margin-bottom: 10%
+  font-size: 0.9em
+
+  &:hover
+    background: #0080FF !important
+    color: white
+
+.success
+  color: green
+  margin-top: 2%
+  text-decoration: underline
+  margin-bottom: 2%
+  text-align: left
+  background: white
+  border-radius: 2px
+  display: inline-block
+  font-size: 1.1em
+
+.error
+  color: red
+  margin-top: 2%
+  margin-left: 5%
+  text-decoration: underline
+  margin-bottom: 2%
+  text-align: center
+  background: white
+  border-radius: 2px
+  display: inline-block
+
+.error_nomatch
+  display: block !important
+
+.center
+  text-align: center
+  > p
+    text-align: center !important
+
+img
+  margin: 10% 0 10% 0
+
+@media only screen and (min-width: 1200px)
+  .login
+    width: 50%
+
+    img
+      width: 110px
+      height: 110px

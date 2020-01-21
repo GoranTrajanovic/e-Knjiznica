@@ -1,0 +1,109 @@
+#back
+  position: absolute
+  top: 2%
+  left: 2%
+  text-decoration: none
+  font-size: 1.2em
+  color: darken(#0080FF, 10%)
+  background: white
+  &:hover
+    text-decoration: underline
+
+  img
+    margin: 0
+
+#table_content
+  border: 2px solid #0080FF
+  border-top-left-radius: 5px
+  border-top-right-radius: 5px
+  border-top: 6px solid $blue
+  margin-bottom: 15%
+  background: white
+
+
+  input[name=text]
+    width: 60%
+    margin: 2%
+    padding: 4px
+    margin-left: 5%
+
+  > form
+    display: inline
+
+#site_content
+  width: 70%
+  margin: auto
+  margin-top: 8%
+
+  input[type=submit]
+    padding: 7px
+    color: white
+    background: $blue
+    border-radius: 3px
+    letter-spacing: 1px
+    margin-bottom: 2%
+
+    &:hover
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.4)
+
+
+  input[type=text]
+    padding: 5px
+    margin-right: 1%
+    margin-bottom: 2%
+
+.delete_button
+  box-shadow: 0px 0px 0px 1px white, 0px 0px 0px 3px $red
+  border-radius: 2px
+
+  > input[type=submit]
+    margin: 0 !important
+    height: 100%
+    width: 100%
+    background: $red !important
+    &:hover
+      box-shadow: none !important
+      background: lighten($red, 10%) !important
+
+.interaction_button
+  box-shadow: 0px 0px 0px 1px white, 0px 0px 0px 3px $blue
+  border-radius: 2px
+
+  > input[type=submit]
+    margin: 0 !important
+    height: 100%
+    width: 100%
+    background: $blue !important
+    &:hover
+      box-shadow: none !important
+      background: lighten($blue, 10%) !important
+
+
+
+
+table
+  border-collapse: collapse
+  width: 90%
+  margin: auto
+
+th, td
+  padding: 2% 1% 2% 1%
+  border-bottom: 2px solid lightgray
+
+th:last-child
+  border: none
+  //width: 100%
+  //float: right
+
+tr:first-child
+  border-bottom: 2px dashed $blue
+  color: $blue
+  font-weight: 600
+
+  th
+    border: none
+
+tr:last-child
+  border: none
+  th
+    border: none
